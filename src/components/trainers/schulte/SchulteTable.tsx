@@ -13,6 +13,8 @@ type LastClickInfo = {
 export default function SchulteTable() {
   const [gameState, setGameState] = useState<GameState>("IDLE");
   const [board, setBoard] = useState<number[]>([]);
+  const [boardSize, setBoardSize] = useState<number>(5); // Просто дефолт
+  const [isMounted, setIsMounted] = useState(false);
   const [activeBoardSize, setActiveBoardSize] = useState<number>(5);
   const [currentTarget, setCurrentTarget] = useState<number>(1);
   const { time, isRunning, start, stop, reset } = useTimer();
@@ -21,6 +23,12 @@ export default function SchulteTable() {
     number: null,
     status: null,
   });
+
+  const difficulties = [
+    { label: "Легко", size: 3 },
+    { label: "Середньо", size: 5 },
+    { label: "Важко", size: 7 },
+  ];
 
   const generateTable = (size: number) => {
     const totalCells = size * size;
@@ -38,10 +46,26 @@ export default function SchulteTable() {
     }
   }, [lastClick]);
 
-  const handleStartGame = (size: number) => {
+  useEffect(() => {
+    setIsMounted(true);
+    const saved = localStorage.getItem("schulte-size");
+    if (saved) {
+      setBoardSize(parseInt(saved));
+    }
+  }, []);
+
+  useEffect(() => {
+    if (isMounted) {
+      localStorage.setItem("schulte-size", boardSize.toString());
+    }
+  }, [boardSize, isMounted]);
+
+  if (!isMounted) return null;
+
+  const handleStartGame = () => {
     reset();
-    setActiveBoardSize(size);
-    setBoard(generateTable(size));
+    setActiveBoardSize(boardSize);
+    setBoard(generateTable(boardSize));
     setCurrentTarget(1);
     setGameState("PLAYING");
     setMistakes(0);
@@ -79,11 +103,27 @@ export default function SchulteTable() {
         <div className="text-center space-y-4">
           <h2 className="text-2xl font-bold">Таблиці Шульте</h2>
           <p className="text-gray-400">
-            Знайдіть числа від 1 до {activeBoardSize * activeBoardSize} якомога
-            швидше.
+            Знайдіть числа від 1 до {boardSize * boardSize} якомога швидше.
           </p>
+          <h4 className="text-m font-semibold">Оберіть складність:</h4>
+          <div className="flex gap-2 justify-center">
+            {difficulties.map((diff) => (
+              <button
+                key={diff.size}
+                onClick={() => setBoardSize(diff.size)}
+                className={`border-2 border-blue-500 px-4 py-2 rounded-2xl font-medium transition-all
+        ${
+          boardSize === diff.size
+            ? "bg-blue-500 text-white shadow-lg shadow-blue-500/30"
+            : "bg-transparent text-blue-500 hover:bg-blue-500/10"
+        }`}
+              >
+                {diff.label} ({diff.size}x{diff.size})
+              </button>
+            ))}
+          </div>
           <button
-            onClick={() => handleStartGame(5)}
+            onClick={handleStartGame}
             className="bg-blue-600 hover:bg-blue-700 px-8 py-3 rounded-xl font-bold transition-all"
           >
             Почати
