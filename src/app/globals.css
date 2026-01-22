@@ -102,5 +102,5 @@ body {
   background-color: var(--background);
   color: var(--foreground);
 
-  font-family: var(--font-geist-sans), ui-sans-serif, system-ui;
+  font-family: var(--font-exo-2), ui-sans-serif, system-ui;
 }
