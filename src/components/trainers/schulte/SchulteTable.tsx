@@ -102,8 +102,10 @@ export default function SchulteTable() {
         <div className="text-center space-y-6 w-full">
           <h2 className="text-3xl font-bold">Таблиці Шульте</h2>
 
-          <div className="bg-gray-100 dark:bg-gray-800 p-6 rounded-2xl space-y-4">
-            <p className="text-gray-500 font-medium">Оберіть складність:</p>
+          <div className="bg-card p-6 rounded-2xl space-y-4">
+            <p className="text-card-foreground font-medium">
+              Оберіть складність:
+            </p>
             <div className="flex justify-center gap-2 flex-wrap">
               {(
                 Object.keys(SCHULTE_PRESETS) as Array<
@@ -115,15 +117,15 @@ export default function SchulteTable() {
                   onClick={() => applyPreset(level)}
                   className={`px-4 py-2 rounded-xl border-2 transition-all font-medium ${
                     difficulty === level
-                      ? "border-blue-500 bg-blue-500 text-white shadow-lg shadow-blue-500/30"
-                      : "border-gray-300 dark:border-gray-600 hover:border-blue-400"
+                      ? "border-primary bg-primary text-primary-foreground shadow-lg shadow-primary/20"
+                      : "border-border hover:border-primary"
                   }`}
                 >
                   {DIFFICULTY_LABELS[level]}
                 </button>
               ))}
             </div>
-            <p className="text-sm text-gray-400">
+            <p className="text-sm text-muted-foreground">
               Поле: {settings.gridSize}x{settings.gridSize} • Чисел:{" "}
               {settings.gridSize ** 2}
             </p>
@@ -131,7 +133,7 @@ export default function SchulteTable() {
 
           <button
             onClick={handleStartGame}
-            className="w-full bg-blue-600 hover:bg-blue-700 text-white py-4 rounded-2xl font-bold text-xl transition-transform active:scale-95 shadow-xl shadow-blue-600/20"
+            className="w-full bg-primary hover:bg-primary-hover text-primary-foreground py-4 rounded-2xl font-bold text-xl transition-all active:scale-95"
           >
             Почати тренування
           </button>
@@ -140,18 +142,18 @@ export default function SchulteTable() {
 
       {gameState === "PLAYING" && (
         <div className="w-full space-y-4 animate-in fade-in zoom-in duration-300">
-          <div className="flex justify-between items-center bg-gray-100 dark:bg-gray-800 p-4 rounded-xl">
+          <div className="flex justify-between items-center bg-card p-4 rounded-xl">
             <div className="text-center">
-              <span className="text-xs text-gray-500 uppercase font-bold">
+              <span className="text-xs text-muted-foreground uppercase font-bold">
                 Ціль
               </span>
-              <div className="text-3xl font-bold text-blue-500">
+              <div className="text-3xl font-bold text-primary">
                 {currentTarget}
               </div>
             </div>
 
             <div className="text-center">
-              <span className="text-xs text-gray-500 uppercase font-bold">
+              <span className="text-xs text-muted-foreground uppercase font-bold">
                 Час
               </span>
               <div className="text-2xl font-mono">
@@ -160,11 +162,11 @@ export default function SchulteTable() {
             </div>
 
             <div className="text-center">
-              <span className="text-xs text-gray-500 uppercase font-bold">
+              <span className="text-xs text-muted-foreground uppercase font-bold">
                 Помилки
               </span>
               <div
-                className={`text-2xl font-bold ${mistakes > 0 ? "text-red-500" : "text-gray-400"}`}
+                className={`text-2xl font-bold ${mistakes > 0 ? "text-destructive" : "text-card-foreground"}`}
               >
                 {mistakes}
               </div>
@@ -187,11 +189,11 @@ export default function SchulteTable() {
                   onClick={() => handleCellClick(number)}
                   className={`
                     border-2 transition-all duration-100 text-xl sm:text-2xl font-bold rounded-xl flex items-center justify-center
-                    ${isCorrect ? "border-green-500 bg-green-500/50 text-white scale-95" : ""}
-                    ${isWrong ? "border-red-500 bg-red-500/50 text-white animate-shake" : ""}
+                    ${isCorrect ? "border-success bg-success/50 text-primary-foreground scale-95" : ""}
+                    ${isWrong ? "border-destructive bg-destructive/50 text-primary-foreground animate-shake" : ""}
                     ${
                       !isCorrect && !isWrong
-                        ? "border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 hover:bg-gray-50 dark:hover:bg-gray-700 active:scale-95 shadow-sm"
+                        ? "border-border bg-muted hover:bg-card active:scale-95 shadow-sm"
                         : ""
                     }
                   `}
@@ -204,7 +206,7 @@ export default function SchulteTable() {
 
           <button
             onClick={handlePlayAgain}
-            className="w-full py-3 text-gray-500 hover:text-red-500 transition-colors"
+            className="w-full py-3 text-muted-foreground hover:text-destructive transition-colors"
           >
             Здатись
           </button>
@@ -217,21 +219,23 @@ export default function SchulteTable() {
           <h2 className="text-3xl font-bold">Результат</h2>
 
           <div className="grid grid-cols-2 gap-4">
-            <div className="bg-gray-100 dark:bg-gray-800 p-4 rounded-2xl">
-              <div className="text-sm text-gray-500">Час</div>
+            <div className="bg-card p-4 rounded-2xl">
+              <div className="text-sm text-muted-foreground">Час</div>
               <div className="text-3xl font-bold">
                 {(time / 1000).toFixed(2)} с
               </div>
             </div>
-            <div className="bg-gray-100 dark:bg-gray-800 p-4 rounded-2xl">
-              <div className="text-sm text-gray-500">Помилки</div>
-              <div className="text-3xl font-bold text-red-500">{mistakes}</div>
+            <div className="bg-card p-4 rounded-2xl">
+              <div className="text-sm text-muted-foreground">Помилки</div>
+              <div className="text-3xl font-bold text-destructive">
+                {mistakes}
+              </div>
             </div>
           </div>
 
           <button
             onClick={handlePlayAgain}
-            className="w-full bg-blue-600 hover:bg-blue-700 text-white py-4 rounded-2xl font-bold text-xl"
+            className="w-full bg-primary hover:bg-primary-hover text-primary-foreground py-4 rounded-2xl font-bold text-xl transition-colors"
           >
             Грати ще раз
           </button>
